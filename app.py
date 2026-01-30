@@ -209,7 +209,7 @@ def get_food_info(product_name):
     return None
 
 async def check_progress(update, context):
-    await update.message.reply_text(f'Вода:\n - Выпито: {context.user_data['logged_water']} из {context.user_data['water_standart']} мл.\n - Осталось: {float(context.user_data['water_standart']) - float(context.user_data['logged_water'])} мл. \n\n Калории: - Потреблено: {context.user_data['logged_calories']} ккал из {context.user_data['calorie_standart']} ккал.\n - Сожжено: {context.user_data['burned_calories']} ккал.\n - Баланс: {float(context.user_data['logged_calories']) - float(context.user_data['burned_calories'])} ккал.')
+    await update.message.reply_text(f"Вода:\n - Выпито: {context.user_data['logged_water']} из {context.user_data['water_standart']} мл.\n - Осталось: {float(context.user_data['water_standart']) - float(context.user_data['logged_water'])} мл. \n\n Калории: - Потреблено: {context.user_data['logged_calories']} ккал из {context.user_data['calorie_standart']} ккал.\n - Сожжено: {context.user_data['burned_calories']} ккал.\n - Баланс: {float(context.user_data['logged_calories']) - float(context.user_data['burned_calories'])} ккал.")
 
 def main():
     application = Application.builder().token(TOKEN_tg).build()
