@@ -1,3 +1,4 @@
+import os
 import logging
 import requests
 from telegram import Update
@@ -5,7 +6,14 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import requests
 
-TOKEN_tg = '8596726954:AAGKMz2OomZkOwGPcyH57wqTwZemy0-rwLY'
+from dotenv import load_dotenv
+
+load_dotenv()
+
+TOKEN_tg = os.getenv('TELEGRAM_BOT_TOKEN')
+API_KEY = os.getenv('OPENWEATHER_API_KEY')
+
+
 
 WEIGHT, HEIGHT, AGE, ACTIVE, CITY, KEYBUTTON, EAT_WEIGHT  = range(7)
 
@@ -41,7 +49,7 @@ async def get_city(update, context):
     context.user_data['calorie_standart'] = 10 * context.user_data['weight'] + 6.25 * context.user_data['height'] - 5 * context.user_data['age']
     context.user_data['water_standart'] = 30 * context.user_data['weight']
     # поиск темпы по городу
-    API_KEY = "ffb8bb9490f8f877c4a600b145f497d9"
+    
     API_URL = f"https://api.openweathermap.org/data/2.5/weather?q={context.user_data['city']}&appid={API_KEY}&units=metric&lang=ru"    
     response = requests.get(API_URL)
     if response.status_code == 401:
