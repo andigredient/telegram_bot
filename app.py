@@ -15,14 +15,18 @@ API_KEY = os.getenv('OPENWEATHER_API_KEY')
 
 
 
-WEIGHT, HEIGHT, AGE, ACTIVE, CITY, KEYBUTTON, EAT_WEIGHT  = range(7)
+WEIGHT, HEIGHT, AGE, ACTIVE, CITY, KEYBUTTON, EAT_WEIGHT, SET_PROFILE  = range(7)
 
 async def set_profile(update, context):
-    context.user_data['logged_calories'] = 0
-    context.user_data['logged_water'] = 0
-    context.user_data['burned_calories'] = 0
-    await update.message.reply_text("Введите ваш вес (в кг):")
-    return WEIGHT
+    try:
+        context.user_data['logged_calories'] = 0
+        context.user_data['logged_water'] = 0
+        context.user_data['burned_calories'] = 0
+        await update.message.reply_text("Введите ваш вес (в кг):")
+        return WEIGHT
+    except ValueError:
+        await update.message.reply_text("Пожалуйста, введите вес.")
+        return SET_PROFILE
 
 async def get_weight(update, context):
     try:
@@ -240,6 +244,7 @@ def main():
             CommandHandler('log_water', log_water),
             CommandHandler('log_food', log_food),
             CommandHandler('check_progress', check_progress),
+            
 
         ],
         states={
@@ -249,7 +254,8 @@ def main():
             ACTIVE: [MessageHandler(filters.TEXT, get_active)],
             CITY: [MessageHandler(filters.TEXT, get_city)],
             EAT_WEIGHT: [MessageHandler(filters.TEXT, eat_weight)],
-            KEYBUTTON: [CallbackQueryHandler(button_handler)],  
+            KEYBUTTON: [CallbackQueryHandler(button_handler)],
+            SET_PROFILE: [CallbackQueryHandler(set_profile)],  
             },
         fallbacks=[
             CommandHandler('cancel', cancel),
