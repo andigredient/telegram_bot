@@ -15,7 +15,7 @@ API_KEY = os.getenv('OPENWEATHER_API_KEY')
 
 
 
-WEIGHT, HEIGHT, AGE, ACTIVE, CITY, KEYBUTTON, EAT_WEIGHT, SET_PROFILE  = range(7)
+WEIGHT, HEIGHT, AGE, ACTIVE, CITY, KEYBUTTON, EAT_WEIGHT, SET_PROFILE  = range(8)
 
 async def set_profile(update, context):
     try:
