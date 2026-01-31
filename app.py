@@ -18,7 +18,6 @@ API_KEY = os.getenv('OPENWEATHER_API_KEY')
 WEIGHT, HEIGHT, AGE, ACTIVE, CITY, KEYBUTTON, EAT_WEIGHT  = range(7)
 
 async def set_profile(update, context):
-    print(f"Update {update} caused error {context.error}")
     context.user_data['logged_calories'] = 0
     context.user_data['logged_water'] = 0
     context.user_data['burned_calories'] = 0
@@ -26,27 +25,24 @@ async def set_profile(update, context):
     return WEIGHT
 
 async def get_weight(update, context):
-    print(f"Update {update} caused error {context.error}")
     try:
         context.user_data['weight'] = float(update.message.text)
         await update.message.reply_text("Введите ваш рост (в см):")
         return HEIGHT
     except ValueError:
         await update.message.reply_text("Пожалуйста, введите вес.")
-        return set_profile
+        return WEIGHT
 
 async def get_height(update, context):
-    print(f"Update {update} caused error {context.error}")
     try:
         context.user_data['height'] = float(update.message.text)
         await update.message.reply_text("Введите ваш возраст:")
         return AGE
     except ValueError:
         await update.message.reply_text("Пожалуйста, введите рост.")
-        return WEIGHT
+        return HEIGHT
 
 async def get_age(update, context):
-    print(f"Update {update} caused error {context.error}")
     try:
         context.user_data['age'] = float(update.message.text)
         await update.message.reply_text("Сколько минут активности у вас в день?")
@@ -56,7 +52,6 @@ async def get_age(update, context):
         return AGE
 
 async def get_active(update, context):
-    print(f"Update {update} caused error {context.error}")
     try:
         context.user_data['activity'] = float(update.message.text)
         await update.message.reply_text("В каком городе вы находитесь?")
@@ -66,7 +61,6 @@ async def get_active(update, context):
         return ACTIVE
 
 async def get_city(update, context):
-    print(f"Update {update} caused error {context.error}")
     try:
         context.user_data['city'] = update.message.text
         context.user_data['calorie_standart'] = 10 * context.user_data['weight'] + 6.25 * context.user_data['height'] - 5 * context.user_data['age']
@@ -112,13 +106,11 @@ async def get_city(update, context):
         return CITY
 
 async def cancel(update, context):
-    print(f"Update {update} caused error {context.error}")
     await update.message.reply_text("Отменено")
     return ConversationHandler.END
 
 
 async def log_water(update, context):
-    print(f"Update {update} caused error {context.error}")
     water_drinked = context.args
     if water_drinked:
         context.user_data['logged_water'] = context.user_data['logged_water'] + float(water_drinked[0])
@@ -128,7 +120,6 @@ async def log_water(update, context):
         return ConversationHandler.END
 
 async def log_workout(update, context):
-    print(f"Update {update} caused error {context.error}")
     times = context.args
     if times:
         context.user_data['time_workout'] = context.args[0]
@@ -177,7 +168,6 @@ async def log_workout(update, context):
     return KEYBUTTON
 
 async def button_handler(update, context):
-    print(f"Update {update} caused error {context.error}")
     query = update.callback_query
     await query.answer()
 
@@ -208,7 +198,6 @@ async def button_handler(update, context):
 
 
 async def log_food(update, context):
-    print(f"Update {update} caused error {context.error}")
     eat_args = context.args
     context.user_data['api_eat_result'] = get_food_info(eat_args)
     print(get_food_info(eat_args))
@@ -216,7 +205,6 @@ async def log_food(update, context):
     return EAT_WEIGHT
 
 async def eat_weight(update, context):
-    print(f"Update {update} caused error {context.error}")
     context.user_data['calorie_eat'] = update.message.text
     weiht_eat = float(context.user_data['calorie_eat'])/100 * float(context.user_data['api_eat_result']['calories'])
     context.user_data['logged_calories'] = weiht_eat
@@ -240,7 +228,6 @@ def get_food_info(product_name):
     return None
 
 async def check_progress(update, context):
-    print(f"Update {update} caused error {context.error}")
     await update.message.reply_text(f"Вода:\n - Выпито: {context.user_data['logged_water']} из {context.user_data['water_standart']} мл.\n - Осталось: {float(context.user_data['water_standart']) - float(context.user_data['logged_water'])} мл. \n\n Калории: - Потреблено: {context.user_data['logged_calories']} ккал из {context.user_data['calorie_standart']} ккал.\n - Сожжено: {context.user_data['burned_calories']} ккал.\n - Баланс: {float(context.user_data['logged_calories']) - float(context.user_data['burned_calories'])} ккал.")
 
 def main():
